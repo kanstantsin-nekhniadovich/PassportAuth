@@ -16,16 +16,16 @@ app.use(session({
   saveUninitialized: true,
   resave: true,
   store: new MongoStore({
-    mongooseConnection: mongoose.connection
-  })
-}))
+    mongooseConnection: mongoose.connection,
+  }),
+}));
 app.use(cookieParser());
 
 app.use('/', function (req, res) {
   res.json({
-    app: 'passport'
+    app: 'passport',
   });
-})
+});
 
 app.listen(3000, function () {
   console.log('server is running');

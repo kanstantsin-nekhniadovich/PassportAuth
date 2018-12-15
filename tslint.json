@@ -2,6 +2,17 @@
   "defaultSeverity": "error",
   "extends": "tslint-config-standard",
   "jsRules": {},
-  "rules": {},
+  "rules": {
+    "semicolon": [true, "always"],
+    "trailing-comma": [true, {
+      "multiline": "always",
+      "singleline": "never"
+    }],
+    "space-before-function-paren": [true, {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"
+    }]
+  },
   "rulesDirectory": []
 }

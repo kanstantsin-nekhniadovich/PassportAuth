@@ -3,8 +3,8 @@ import bcrypt from 'bcrypt';
 import express from 'express';
 
 interface UserModel extends Document {
-  username: string,
-  password: string
+  username: string;
+  password: string;
 }
 
 export class User {
@@ -14,7 +14,7 @@ export class User {
     const userSchema: Schema = new Schema({
       username: String,
       hash: String,
-      salt: String
+      salt: String,
     });
     this.user = model('User', userSchema);
   }
@@ -23,22 +23,26 @@ export class User {
     return this.user;
   }
 
-  public createUser(user: UserModel, fn: () => {}) {
-    bcrypt.genSalt(10, function (err, salt) {
-      if (err) {
-        return;
-      }
-      bcrypt.hash(user.password, salt, function (err, hash) {
-        user.password = hash;
-        user.save(fn);
-      });
-    });
+  public async createUser(user: UserModel, fn: (response: any) => {}) {
+    try {
+      const salt = await bcrypt.genSalt(10);
+      const hash = await bcrypt.hash(user.password, salt);
+      user.password = hash;
+      user.save()
+        .then(fn)
+        .catch((err) => {
+          console.log(err.message);
+        });
+    } catch (err) {
+      console.log(err.message);
+    }
   }
 
   public async getUser(req: express.Request, res: express.Response) {
     const id = req.params.id;
     try {
-      const user = await this.user.findOne({ id: id });
+      const cursor = this.user.findOne({ id: id }).cursor();
+      const user = await cursor.next();
       res.send(user);
     } catch (err) {
       res.status(500).send(err.message);

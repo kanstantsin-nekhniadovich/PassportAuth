@@ -6,7 +6,15 @@
   "scripts": {
     "start": "ts-node server/server.ts",
     "prestart:prod": "rm -rf dist && tsc",
-    "start:prod": "node dist/main.js"
+    "start:prod": "node dist/main.js",
+    "lint": "tslint 'server/**/*.ts' --project tsconfig.json --fix --format stylish",
+    "prepush": "npm run lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run prepush",
+      "...": "..."
+    }
   },
   "author": "Kanstantsin Nekhniadovich",
   "license": "ISC",
@@ -21,6 +29,7 @@
     "@types/passport": "^0.4.7",
     "@types/passport-local": "^1.0.33",
     "cookie-parser": "^1.4.3",
+    "husky": "^1.2.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-standard": "^8.0.1",
