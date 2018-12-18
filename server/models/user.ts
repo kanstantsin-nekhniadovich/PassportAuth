@@ -2,50 +2,113 @@ import { Document, Schema, Model, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import express from 'express';
 
-interface UserModel extends Document {
+export interface UserType {
   username: string;
   password: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  city: string;
 }
 
+interface UserModel extends Document { }
+
 export class User {
-  private user: Model<UserModel>;
+  private UserModel: Model<UserModel>;
 
   constructor() {
     const userSchema: Schema = new Schema({
       username: String,
-      hash: String,
-      salt: String,
+      password: String,
+      firstName: String,
+      lastName: String,
+      age: Number,
+      city: String,
     });
-    this.user = model('User', userSchema);
+    this.UserModel = model('User', userSchema);
   }
 
-  public getUserModel(): Model<UserModel> {
-    return this.user;
-  }
+  public async createUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const userData = {
+      username: req.body.username,
+      password: req.body.password,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      age: req.body.age,
+      city: req.body.city,
+    };
 
-  public async createUser(user: UserModel, fn: (response: any) => {}) {
     try {
       const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(user.password, salt);
-      user.password = hash;
+      const hash = await bcrypt.hash(userData.password, salt);
+      userData.password = hash;
+      const user = new this.UserModel(userData);
       user.save()
-        .then(fn)
-        .catch((err) => {
-          console.log(err.message);
+        .then(() => {
+          res.json({
+            message: `User ${userData.username} was successfully created`,
+          });
+        }).catch((err) => {
+          next(err);
         });
     } catch (err) {
-      console.log(err.message);
+      next(err);
     }
   }
 
-  public async getUser(req: express.Request, res: express.Response) {
+  public async getUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     const id = req.params.id;
+
     try {
-      const cursor = this.user.findOne({ id: id }).cursor();
+      const cursor = this.UserModel.findOne({ _id: id }).cursor();
       const user = await cursor.next();
-      res.send(user);
+      res.json(user);
     } catch (err) {
-      res.status(500).send(err.message);
+      next(err);
+    }
+  }
+
+  public async getUsers(req: express.Request, res: express.Response, next: express.NextFunction) {
+    try {
+      const cursor = this.UserModel.find().cursor();
+      const users = await cursor.next();
+      res.json(users);
+    } catch (err) {
+      console.log('here');
+      next(err);
+    }
+  }
+
+  public async updateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const id = req.params.id;
+    const userData = {
+      username: req.body.username,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      age: req.body.age,
+      city: req.body.city,
+    };
+
+    try {
+      const cursor = this.UserModel.update({ _id: id }, userData).cursor();
+      const result = await cursor.next();
+      res.json(result);
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  public async removeUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const id = req.params.id;
+
+    try {
+      const cursor = this.UserModel.deleteOne({ _id: id }).cursor();
+      await cursor.next();
+      res.json({
+        message: `User with id = ${id} was successfully removed`,
+      });
+    } catch (err) {
+      next(err);
     }
   }
 
