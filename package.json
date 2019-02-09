@@ -4,9 +4,9 @@
   "description": "",
   "main": "server/server.ts",
   "scripts": {
-    "start": "ts-node server/server.ts",
+    "start": "NODE_ENV=dev ts-node server/server.ts",
     "prestart:prod": "rm -rf dist && tsc",
-    "start:prod": "node dist/main.js",
+    "start:prod": "NODE_ENV=production node dist/main.js",
     "lint": "tslint 'server/**/*.ts' --project tsconfig.json --fix --format stylish",
     "prepush": "npm run lint"
   },
@@ -28,6 +28,7 @@
     "@types/passport": "^0.4.7",
     "@types/passport-local": "^1.0.33",
     "cookie-parser": "^1.4.3",
+    "envalid": "^4.2.1",
     "husky": "^1.2.1",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",

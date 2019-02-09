@@ -1,6 +1,7 @@
-import { Document, Schema, Model, model } from 'mongoose';
+import { Document, Schema, Model, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
 import express from 'express';
+import { HttpException, UserNotFoundException } from '../exceptions';
 
 export interface UserType {
   username: string;
@@ -45,42 +46,54 @@ export class User {
       const user = new this.UserModel(userData);
       user.save()
         .then(() => {
-          res.json({
+          res.status(200).send({
             message: `User ${userData.username} was successfully created`,
           });
         }).catch((err) => {
-          next(err);
+          const error = new HttpException(500, err.message);
+          next(error);
         });
     } catch (err) {
-      next(err);
+      const error = new HttpException(500, err.message);
+      next(error);
     }
   }
 
   public async getUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     const id = req.params.id;
 
+    if (!Types.ObjectId.isValid(id)) {
+      const error = new UserNotFoundException(id);
+      return next(error);
+    }
+
     try {
-      const cursor = this.UserModel.findOne({ _id: id }).cursor();
-      const user = await cursor.next();
-      res.json(user);
+      const user = await this.UserModel.findOne({ _id: id }).exec();
+      res.status(200).send(user);
     } catch (err) {
-      next(err);
+      const error = new UserNotFoundException(id);
+      return next(error);
     }
   }
 
   public async getUsers(req: express.Request, res: express.Response, next: express.NextFunction) {
     try {
-      const cursor = this.UserModel.find().cursor();
-      const users = await cursor.next();
-      res.json(users);
+      const users = await this.UserModel.find().exec();
+      res.status(200).send(users);
     } catch (err) {
-      console.log('here');
-      next(err);
+      const error = new HttpException(404, 'users not found');
+      next(error);
     }
   }
 
   public async updateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     const id = req.params.id;
+
+    if (!Types.ObjectId.isValid(id)) {
+      const error = new UserNotFoundException(id);
+      return next(error);
+    }
+
     const userData = {
       username: req.body.username,
       firstName: req.body.firstName,
@@ -90,25 +103,30 @@ export class User {
     };
 
     try {
-      const cursor = this.UserModel.update({ _id: id }, userData).cursor();
-      const result = await cursor.next();
-      res.json(result);
+      const result = await this.UserModel.update({ _id: id }, userData).exec();
+      res.status(200).send(result);
     } catch (err) {
-      next(err);
+      const error = new HttpException(500, err.message);
+      next(error);
     }
   }
 
   public async removeUser(req: express.Request, res: express.Response, next: express.NextFunction) {
     const id = req.params.id;
 
+    if (!Types.ObjectId.isValid(id)) {
+      const error = new UserNotFoundException(id);
+      return next(error);
+    }
+
     try {
-      const cursor = this.UserModel.deleteOne({ _id: id }).cursor();
-      await cursor.next();
-      res.json({
+      await this.UserModel.deleteOne({ _id: id }).exec();
+      res.status(200).send({
         message: `User with id = ${id} was successfully removed`,
       });
     } catch (err) {
-      next(err);
+      const error = new HttpException(500, err.message);
+      next(error);
     }
   }
 
