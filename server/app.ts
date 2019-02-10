@@ -1,26 +1,30 @@
-import express, { Application } from 'express';
+import express, { Application, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import connectMongo, { MongoStoreFactory } from 'connect-mongo';
 import mongoose from 'mongoose';
+import passport from 'passport';
 import { MongooseConfiguration } from './mongoose';
 import { Controller } from './controllers';
 import { errorMiddleware } from './middlewares/errorMiddleware';
+import { Auth } from './auth/Auth';
 
 export class App {
   public app: Application;
   public port: number;
   public mongoStore: MongoStoreFactory;
   private endpointPrefix = 'api';
+  private auth: Auth;
 
   constructor(controllers: Controller[]) {
     this.app = express();
     this.mongoStore = connectMongo(session);
-    this.confiMongoose();
+    this.configMongoose();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
+    this.auth = new Auth();
     this.port = 4000;
   }
 
@@ -52,14 +56,20 @@ export class App {
         mongooseConnection: mongoose.connection,
       }),
     }));
+    // remove it after check including index.html
+    this.app.use(express.static(__dirname));
+    this.app.set('view engine', 'html');
+
     this.app.use(cookieParser());
+    this.app.use(passport.initialize());
+    this.app.use(passport.session());
   }
 
-  private initializeErrorHandling() {
+  private initializeErrorHandling(): void {
     this.app.use(errorMiddleware);
   }
 
-  private confiMongoose(): void {
+  private configMongoose(): void {
     const mongooseConfig = new MongooseConfiguration();
     mongooseConfig.connect();
   }

@@ -1,5 +1,5 @@
 import { App } from './app';
-import { UserController } from './controllers';
+import { UserController, AuthController } from './controllers';
 import * as Utils from './utils';
 
 if (Utils.isProdMode()) {
@@ -8,6 +8,7 @@ if (Utils.isProdMode()) {
 
 const app = new App([
   new UserController(),
+  new AuthController(),
 ]);
 
 app.listen();

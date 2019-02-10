@@ -5,14 +5,24 @@ import { HttpException, UserNotFoundException } from '../exceptions';
 
 export interface UserType {
   username: string;
-  password: string;
+  hashed_psw: string;
   firstName: string;
   lastName: string;
   age: number;
   city: string;
+  facebook: {
+    id: string;
+    accessToken: string;
+  };
+  google: {
+    id: string;
+    accessToken: string;
+  };
 }
 
-interface UserModel extends Document { }
+export interface UserModel extends Document, UserType {
+  verifyPassword: (password: string, hash: string) => boolean;
+}
 
 export class User {
   private UserModel: Model<UserModel>;
@@ -20,19 +30,29 @@ export class User {
   constructor() {
     const userSchema: Schema = new Schema({
       username: String,
-      password: String,
+      hashed_psw: String,
       firstName: String,
       lastName: String,
       age: Number,
       city: String,
+      facebook: {
+        type: Object,
+      },
+      google: {
+        type: Object,
+      },
     });
+
+    userSchema.methods.verifyPassword = function (password: string, hash: string): boolean {
+      return bcrypt.compareSync(password, hash);
+    };
     this.UserModel = model('User', userSchema);
   }
 
-  public async createUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async createUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const userData = {
       username: req.body.username,
-      password: req.body.password,
+      hashed_psw: '',
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       age: req.body.age,
@@ -41,8 +61,8 @@ export class User {
 
     try {
       const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(userData.password, salt);
-      userData.password = hash;
+      const hash = await bcrypt.hash(req.body.password, salt);
+      userData.hashed_psw = hash;
       const user = new this.UserModel(userData);
       user.save()
         .then(() => {
@@ -59,7 +79,7 @@ export class User {
     }
   }
 
-  public async getUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async getUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {
@@ -76,7 +96,7 @@ export class User {
     }
   }
 
-  public async getUsers(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async getUsers(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     try {
       const users = await this.UserModel.find().exec();
       res.status(200).send(users);
@@ -86,7 +106,7 @@ export class User {
     }
   }
 
-  public async updateUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async updateUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {
@@ -111,7 +131,7 @@ export class User {
     }
   }
 
-  public async removeUser(req: express.Request, res: express.Response, next: express.NextFunction) {
+  public async removeUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {
@@ -129,5 +149,4 @@ export class User {
       next(error);
     }
   }
-
 }
