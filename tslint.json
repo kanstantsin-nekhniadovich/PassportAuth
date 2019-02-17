@@ -13,6 +13,7 @@
       "named": "never",
       "asyncArrow": "always"
     }],
+    "no-any": true,
     "no-floating-promises": false
   },
   "rulesDirectory": []

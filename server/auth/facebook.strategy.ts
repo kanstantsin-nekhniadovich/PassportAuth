@@ -6,12 +6,18 @@ const FacebookStrategy = require('passport-facebook').Strategy;
 const CLIENT_ID = '1145756292155454';
 const CLIENT_SECRET = 'c4700acb7152e3febed0be07d35b48c6';
 
+interface FacebookProfile {
+  id: string;
+  username: string;
+  name: string[];
+}
+
 export default function (UserShema: Model<UserModel>) {
   passport.use(new FacebookStrategy({
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
     callbackURL: 'http://localhost:4000/api/auth/facebook/callback',
-  }, (accessToken: string, refreshToken: string, profile: any, done: Function) => {
+  }, (accessToken: string, refreshToken: string, profile: FacebookProfile, done: Function): void => {
     UserShema.findOne({ 'facebook.id': profile.id }, function (err: Error, user: UserModel) {
       if (err) {
         done(err, null);
