@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
@@ -23,8 +23,9 @@ export class App {
     this.configMongoose();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
-    this.initializeErrorHandling();
     this.auth = new Auth();
+    this.auth.init();
+    this.initializeErrorHandling();
     this.port = 4000;
   }
 

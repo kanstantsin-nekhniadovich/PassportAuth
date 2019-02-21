@@ -1,6 +1,6 @@
 import { Document, Schema, Model, model, Types } from 'mongoose';
 import bcrypt from 'bcrypt';
-import express from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { HttpException, UserNotFoundException } from '../exceptions';
 
 export interface UserType {
@@ -49,7 +49,7 @@ export class User {
     this.UserModel = model('User', userSchema);
   }
 
-  public async createUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
+  public async createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     const userData = {
       username: req.body.username,
       hashed_psw: '',
@@ -79,7 +79,7 @@ export class User {
     }
   }
 
-  public async getUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
+  public async getUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {
@@ -96,7 +96,7 @@ export class User {
     }
   }
 
-  public async getUsers(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
+  public async getUsers(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const users = await this.UserModel.find().exec();
       res.status(200).send(users);
@@ -106,7 +106,7 @@ export class User {
     }
   }
 
-  public async updateUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
+  public async updateUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {
@@ -131,7 +131,7 @@ export class User {
     }
   }
 
-  public async removeUser(req: express.Request, res: express.Response, next: express.NextFunction): Promise<void> {
+  public async removeUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     const id = req.params.id;
 
     if (!Types.ObjectId.isValid(id)) {

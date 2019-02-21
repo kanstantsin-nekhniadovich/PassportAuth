@@ -1,4 +1,4 @@
-import { UserModel, UserType } from '../models/user';
+import { UserModel } from '../models/user';
 import { Model } from 'mongoose';
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;

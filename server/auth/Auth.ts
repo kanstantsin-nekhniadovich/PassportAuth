@@ -13,7 +13,6 @@ export class Auth {
   constructor() {
     this.userShema = mongoose.model('User');
     this.user = new this.userShema();
-    this.init();
   }
 
   public init(): void {

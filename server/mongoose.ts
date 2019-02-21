@@ -13,7 +13,7 @@ export class MongooseConfiguration {
 
   constructor() {
     mongoose.Promise = global.Promise;
-    this.connectionPath = Utils.isProdMode() ? 'mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}`' : 'mongodb://localhost/PassportAuth';
+    this.connectionPath = Utils.isProdMode() ? `mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGO_PATH}` : 'mongodb://localhost/PassportAuth';
   }
 
   public connect() {

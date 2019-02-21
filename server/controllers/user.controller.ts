@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import { Response, Request, Router, NextFunction } from 'express';
 import { Controller } from './controller.interface';
 import { User } from '../models/user';
 
@@ -21,23 +21,23 @@ export class UserController implements Controller {
     this.router.delete(`${this.path}/:id`, this.removeUser);
   }
 
-  public getUsers = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  public getUsers = (req: Request, res: Response, next: NextFunction): void => {
     this.user.getUsers(req, res, next);
   }
 
-  public getUserById = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  public getUserById = (req: Request, res: Response, next: NextFunction): void => {
     this.user.getUser(req, res, next);
   }
 
-  public createUser = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  public createUser = (req: Request, res: Response, next: NextFunction): void => {
     this.user.createUser(req, res, next);
   }
 
-  public updateUser = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  public updateUser = (req: Request, res: Response, next: NextFunction): void => {
     this.user.updateUser(req, res, next);
   }
 
-  public removeUser = (req: express.Request, res: express.Response, next: express.NextFunction): void => {
+  public removeUser = (req: Request, res: Response, next: NextFunction): void => {
     this.user.removeUser(req, res, next);
   }
 }

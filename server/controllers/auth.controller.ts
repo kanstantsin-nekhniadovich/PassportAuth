@@ -35,6 +35,6 @@ export class AuthController implements Controller {
   }
 
   private googlSuccessRoute = (req: Request, res: Response, next: NextFunction): void => {
-    res.redirect('/');
+    res.redirect('/api/users');
   }
 }
