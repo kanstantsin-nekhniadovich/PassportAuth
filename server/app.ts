@@ -5,10 +5,13 @@ import cookieParser from 'cookie-parser';
 import connectMongo, { MongoStoreFactory } from 'connect-mongo';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import cors from 'cors';
 import { MongooseConfiguration } from './mongoose';
 import { Controller } from './controllers';
 import { errorMiddleware } from './middlewares/errorMiddleware';
 import { Auth } from './auth/Auth';
+import { renderSSR } from './middlewares/ssr-middleware';
+import { resolve } from 'path';
 
 export class App {
   public app: Application;
@@ -57,13 +60,15 @@ export class App {
         mongooseConnection: mongoose.connection,
       }),
     }));
+    this.app.use(cors());
     // remove it after check including index.html
-    this.app.use(express.static(__dirname));
-    this.app.set('view engine', 'html');
+    this.app.use(express.static(resolve(__dirname, '../public')));
+    // this.app.set('view engine', 'html');
 
     this.app.use(cookieParser());
     this.app.use(passport.initialize());
     this.app.use(passport.session());
+    this.app.get('/', renderSSR);
   }
 
   private initializeErrorHandling(): void {
