@@ -1,1 +1,1 @@
-Passport Auth
+pa-server
