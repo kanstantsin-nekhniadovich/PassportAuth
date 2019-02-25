@@ -70,7 +70,7 @@
     "./node_modules/@types/node/index.d.ts"
   ],
   "include": [
-    "server/**/*.ts"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules"

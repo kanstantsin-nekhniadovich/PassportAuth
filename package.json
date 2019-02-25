@@ -4,11 +4,11 @@
   "description": "",
   "main": "server/server.ts",
   "scripts": {
-    "start": "NODE_ENV=dev ts-node server/server.ts",
-    "watch": "nodemon -e ts -w ./server -x npm run start",
+    "start": "NODE_ENV=dev ts-node src/server.ts",
+    "watch": "nodemon -e ts -w ./src -x npm run start",
     "prestart:prod": "rm -rf dist && tsc",
     "start:prod": "NODE_ENV=production node dist/main.js",
-    "lint": "tslint 'server/**/*.ts' --project tsconfig.json --fix --format stylish",
+    "lint": "tslint 'src/**/*.ts' --project tsconfig.json --fix --format stylish",
     "prepush": "npm run lint"
   },
   "husky": {
