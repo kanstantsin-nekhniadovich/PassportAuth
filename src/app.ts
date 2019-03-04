@@ -1,6 +1,7 @@
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
 import session from 'express-session';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import connectMongo, { MongoStoreFactory } from 'connect-mongo';
 import mongoose from 'mongoose';
@@ -44,6 +45,7 @@ export class App {
   private initializeMiddlewares(): void {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
+    this.app.use(cors());
     this.app.use(session({
       secret: 'passport auth',
       saveUninitialized: true,

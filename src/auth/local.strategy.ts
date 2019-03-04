@@ -10,7 +10,8 @@ export default function (User: UserModel, UserShema: Model<UserModel>) {
       if (!user) {
         return done(null, false, { message: 'Incorrect username.' });
       }
-      if (!User.verifyPassword(password, user.id)) {
+      console.log(user);
+      if (!User.verifyPassword(password, user.hashed_psw)) {
         return done(null, false, { message: 'Incorrect password.' });
       }
       return done(null, user);

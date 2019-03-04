@@ -70,7 +70,7 @@
     "./node_modules/@types/node/index.d.ts"
   ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*.ts", "../pa-frontend/src/contexts/AuthContext.tsx", "../pa-frontend/src/contexts/AuthProvider.tsx", "../pa-frontend/src/contexts/AuthContext.tsx"
   ],
   "exclude": [
     "node_modules"

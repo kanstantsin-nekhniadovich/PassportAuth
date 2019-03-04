@@ -12,7 +12,7 @@ interface GoogleProfile {
   name: string[];
 }
 
-export default function (UserShema: Model<UserModel>) {
+export default function (UserShema: Model<UserModel>): void {
   passport.use(new GoogleStrategy({
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,

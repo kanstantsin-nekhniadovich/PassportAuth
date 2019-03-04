@@ -12,7 +12,7 @@ interface FacebookProfile {
   name: string[];
 }
 
-export default function (UserShema: Model<UserModel>) {
+export default function (UserShema: Model<UserModel>): void {
   passport.use(new FacebookStrategy({
     clientID: CLIENT_ID,
     clientSecret: CLIENT_SECRET,
