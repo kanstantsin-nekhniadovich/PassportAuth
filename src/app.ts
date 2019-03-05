@@ -1,10 +1,10 @@
 import express, { Application } from 'express';
 import bodyParser from 'body-parser';
-import session from 'express-session';
+// import session from 'express-session';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import connectMongo, { MongoStoreFactory } from 'connect-mongo';
-import mongoose from 'mongoose';
+// import { MongoStoreFactory } from 'connect-mongo';
+// import mongoose from 'mongoose';
 import passport from 'passport';
 import { MongooseConfiguration } from './mongoose';
 import { Controller } from './controllers';
@@ -14,13 +14,13 @@ import { Auth } from './auth/Auth';
 export class App {
   public app: Application;
   public port: number;
-  public mongoStore: MongoStoreFactory;
+  // public mongoStore: MongoStoreFactory;
   private endpointPrefix = 'api';
   private auth: Auth;
 
   constructor(controllers: Controller[]) {
     this.app = express();
-    this.mongoStore = connectMongo(session);
+    // this.mongoStore = connectMongo(session);
     this.configMongoose();
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
@@ -46,26 +46,26 @@ export class App {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(cors());
-    this.app.use(session({
-      secret: 'passport auth',
-      saveUninitialized: true,
-      resave: true,
-      cookie: {
-        path: '/',
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000,
-      },
-      store: new this.mongoStore({
-        mongooseConnection: mongoose.connection,
-      }),
-    }));
+    // this.app.use(session({
+    //   secret: 'passport auth',
+    //   saveUninitialized: true,
+    //   resave: true,
+    //   cookie: {
+    //     path: '/',
+    //     httpOnly: true,
+    //     maxAge: 24 * 60 * 60 * 1000,
+    //   },
+    //   store: new this.mongoStore({
+    //     mongooseConnection: mongoose.connection,
+    //   }),
+    // }));
     // remove it after check including index.html
     this.app.use(express.static(__dirname));
     this.app.set('view engine', 'html');
 
     this.app.use(cookieParser());
     this.app.use(passport.initialize());
-    this.app.use(passport.session());
+    // this.app.use(passport.session());
   }
 
   private initializeErrorHandling(): void {

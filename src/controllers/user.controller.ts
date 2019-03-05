@@ -1,6 +1,7 @@
 import { Response, Request, Router, NextFunction } from 'express';
 import { Controller } from './controller.interface';
 import { User } from '../models/user';
+const passport = require('passport');
 
 export class UserController implements Controller {
   public router: Router;
@@ -14,11 +15,11 @@ export class UserController implements Controller {
   }
 
   private initializeRoutes() {
-    this.router.get(this.path, this.getUsers);
-    this.router.get(`${this.path}/:id`, this.getUserById);
-    this.router.post(this.path, this.createUser);
-    this.router.put(`${this.path}/:id`, this.updateUser);
-    this.router.delete(`${this.path}/:id`, this.removeUser);
+    this.router.get(this.path, passport.authenticate('jwt', { session: false }), this.getUsers);
+    this.router.get(`${this.path}/:id`, passport.authenticate('jwt', { session: false }), this.getUserById);
+    this.router.post(this.path, passport.authenticate('jwt', { session: false }), this.createUser);
+    this.router.put(`${this.path}/:id`, passport.authenticate('jwt', { session: false }), this.updateUser);
+    this.router.delete(`${this.path}/:id`, passport.authenticate('jwt', { session: false }), this.removeUser);
   }
 
   public getUsers = (req: Request, res: Response, next: NextFunction): void => {
