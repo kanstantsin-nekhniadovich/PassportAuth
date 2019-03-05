@@ -13,7 +13,6 @@ import { Auth } from './auth/Auth';
 
 export class App {
   public app: Application;
-  public port: number;
   // public mongoStore: MongoStoreFactory;
   private endpointPrefix = 'api';
   private auth: Auth;
@@ -27,13 +26,6 @@ export class App {
     this.auth = new Auth();
     this.auth.init();
     this.initializeErrorHandling();
-    this.port = 4000;
-  }
-
-  public listen(): void {
-    this.app.listen(this.port, () => {
-      console.log(`server is listening on port: ${this.port}`);
-    });
   }
 
   private initializeControllers(controllers: Controller[]): void {

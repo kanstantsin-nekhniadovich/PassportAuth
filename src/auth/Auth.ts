@@ -1,10 +1,9 @@
 import mongoose, { Model } from 'mongoose';
+import passport from 'passport';
 import { UserModel, UserType } from '../models/user';
 import initLocalStrategy from './local.strategy';
 // import initFacebookStrategy from './facebook.strategy';
 // import initGoogleStrategy from './google.strategy';
-
-const passport = require('passport');
 
 export class Auth {
   private userShema: Model<UserModel>;

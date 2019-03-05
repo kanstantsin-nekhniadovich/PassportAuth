@@ -1,10 +1,8 @@
 import { UserModel } from '../models/user';
 import { Model } from 'mongoose';
-const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const passportJWT = require('passport-jwt');
-const ExtractJWT = passportJWT.ExtractJwt;
-const JWTStrategy = passportJWT.Strategy;
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
+import { ExtractJwt, Strategy as JWTStrategy } from 'passport-jwt';
 import config from '../config';
 
 export default function (User: UserModel, UserShema: Model<UserModel>) {
@@ -24,7 +22,7 @@ export default function (User: UserModel, UserShema: Model<UserModel>) {
   ));
 
   passport.use(new JWTStrategy({
-    jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: config.jwtSecret,
   },
     function (jwtPayload: { id: 'string' }, cb: Function) {
