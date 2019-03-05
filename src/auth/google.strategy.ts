@@ -3,14 +3,12 @@ import { OAuth2Strategy as GoogleStrategy, Profile } from 'passport-google-oauth
 import { Model } from 'mongoose';
 import { UserModel } from '../models/user';
 import { Request } from 'express';
-
-const CLIENT_ID = '499286742753-aln8lr6eiba3iq3le1unc4au7mm37m20.apps.googleusercontent.com';
-const CLIENT_SECRET = 'yREGrdZNvKSr4PcGXMsZ8Rf7';
+import { google } from '../oauthData';
 
 export default function (UserShema: Model<UserModel>): void {
   passport.use(new GoogleStrategy({
-    clientID: CLIENT_ID,
-    clientSecret: CLIENT_SECRET,
+    clientID: google.CLIENT_ID,
+    clientSecret: google.CLIENT_SECRET,
     callbackURL: 'http://localhost:4000/api/auth/google/callback',
     passReqToCallback: false,
   }, (req: Request, accessToken: string, refreshToken: string, profile: Profile, done: Function): void => {

@@ -15,8 +15,8 @@ const expressApp = new App([
 ]);
 
 https.createServer({
-  key: fs.readFileSync('src/server.key'),
-  cert: fs.readFileSync('src/server.cert'),
+  key: fs.readFileSync('server.key'),
+  cert: fs.readFileSync('server.cert'),
 }, expressApp.app).listen(config.port, () => {
   console.log(`the app is listening on port ${config.port}`);
 });
