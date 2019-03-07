@@ -1,8 +1,9 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import { Controller } from './controller.interface';
 import config from '../config';
-const jwt = require('jsonwebtoken');
+import { verifyToken } from '../auth/verifyToken';
 
 export class AuthController implements Controller {
   public router: Router;
@@ -15,6 +16,7 @@ export class AuthController implements Controller {
   public initializeRoutes(): void {
     this.router.post('/login', this.login);
     this.router.get('/logout', this.logout);
+    this.router.get('/token', verifyToken);
     // this.router.get('/auth/facebook', passport.authenticate('facebook')); // TODO: refactor problem with route 'api' prefix
     // this.router.get('/auth/facebook/callback',
     //   passport.authenticate('facebook', {
