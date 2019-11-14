@@ -1,5 +1,5 @@
 import { Document, Schema, Model, model, Types } from 'mongoose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { Request, Response, NextFunction } from 'express';
 import { HttpException, UserNotFoundException } from '../exceptions';
 

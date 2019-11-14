@@ -19,7 +19,7 @@
   "author": "Kanstantsin Nekhniadovich",
   "license": "ISC",
   "devDependencies": {
-    "@types/bcrypt": "^3.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.17.0",
     "@types/connect-mongo": "0.0.39",
     "@types/cookie-parser": "^1.4.1",
@@ -47,7 +47,7 @@
     "typescript": "^3.2.2"
   },
   "dependencies": {
-    "bcrypt": "^3.0.2",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "connect-mongo": "^2.0.3",
     "cors": "^2.8.5",
